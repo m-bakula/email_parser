@@ -1,7 +1,7 @@
 import os
 from typing import Type
 
-from src import functions
+from src.functions import is_valid
 from src.reader import ReaderAbstract
 from src.reader import ReaderCsv
 from src.reader import ReaderTxt
@@ -30,7 +30,7 @@ class Parser:
 
     def parse_file(self, file: str, validate: bool = True) -> None:
         filepath = os.path.abspath(file)
-        extension = functions.get_extension(filepath)
+        extension = os.path.splitext(filepath)[1]
 
         if extension in self.ext_to_reader.keys():
             reader_class: Type[ReaderAbstract] = self.ext_to_reader.get(extension)
@@ -39,7 +39,7 @@ class Parser:
 
             if validate:
                 for address in new_contents:
-                    if functions.is_valid(address):
+                    if is_valid(address):
                         self.contents.add(address)
                     else:
                         self.invalid_contents.append(address)
